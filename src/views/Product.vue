@@ -2,16 +2,14 @@
     <div class="page-product">
         <div class="columns is-multiline">
             <div class="column is-9">
-                
-                <figure class="image mb-6">
-                    <img v-bind:src="product.get_image"
+                <figure class="image custom-image-size">
+                    <img v-bind:src="product.get_image" alt="Product Image">
                 </figure>
 
                 <h1 class="title">{{ product.name }}</h1>
 
                 <p>{{ product.description }}</p>
-
-            </div> 
+            </div>
 
             <div class="column is-3">
                 <h2 class="subtitle">Information</h2>
@@ -24,18 +22,18 @@
                     </div>
 
                     <div class="control">
-                        <a class="buttonis-dark" @click="addToCart">Add to cart</a>
+                        <a class="button is-dark" @click="addToCart()">Add to cart</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
+
 import axios from 'axios'
-import { toast } from 'bulma-toast';
+import { toast } from 'bulma-toast'
 
 export default {
     name: 'Product',
@@ -46,13 +44,11 @@ export default {
         }
     },
     mounted() {
-        this.getProduct()
+        this.getProduct() 
     },
     methods: {
-        async getProduct() { 
-
+        async getProduct() {
             this.$store.commit('setIsLoading', true)
-
 
             const category_slug = this.$route.params.category_slug
             const product_slug = this.$route.params.product_slug
@@ -61,14 +57,15 @@ export default {
                 .get(`/api/v1/products/${category_slug}/${product_slug}`)
                 .then(response => {
                     this.product = response.data
+
+                    document.title = this.product.name + ' | Djackets'
                 })
                 .catch(error => {
                     console.log(error)
                 })
-
-                this.$store.commit('setIsLoading', false)
+            
+            this.$store.commit('setIsLoading', false)
         },
-
         addToCart() {
             if (isNaN(this.quantity) || this.quantity < 1) {
                 this.quantity = 1
@@ -81,17 +78,24 @@ export default {
 
             this.$store.commit('addToCart', item)
 
-            toast(
-                {
-                    message: 'This product has been added to your cart',
-                    type: 'is-success',
-                    dismissible: true,
-                    pauseOnHover: true,
-                    duration: 2000,
-                    position: 'bottom-right'
-                }
-            )
+            toast({
+                message: 'The product was added to the cart',
+                type: 'is-success',
+                dismissible: true,
+                pauseOnHover: true,
+                duration: 2000,
+                position: 'bottom-right',
+            })
         }
     }
 }
 </script>
+
+<style scoped>
+.custom-image-size img {
+    width: 100%;
+    height: auto;
+    max-width: 400px; /* Adjust the max-width to your desired value */
+    object-fit: cover; /* This ensures the image covers the area without distortion */
+}
+</style>

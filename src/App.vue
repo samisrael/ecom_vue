@@ -1,7 +1,6 @@
 <template>
   <div id="wrapper">
     <nav class="navbar is-dark">
-
       <div class="navbar-brand">
         <router-link to="/" class="navbar-item"><strong>Siete</strong></router-link>
 
@@ -29,7 +28,7 @@
         </div>
       </div>
     </nav>
-    
+
     <div class="is-loading-bar has-text-centered" v-bind:class ="{ 'is-loading': $store.state.isLoading }">
       <div class="lds-dual-ring"></div>
     </div>
