@@ -5,6 +5,7 @@ import HomeView from '../views/Home.vue'
 import Product from '@/views/Product.vue'
 import Category from '@/views/Category.vue'
 import path from 'path-browserify'
+import Search from '@/views/Search.vue'
 const routes = [
   {
     path: '/',
@@ -24,11 +25,15 @@ const routes = [
     name: 'product',
     component: Product,
   },
-
   {
     path: '/:category_slug',
     name: 'Category',
     component: Category,
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: Search,
   }
 ]
 
