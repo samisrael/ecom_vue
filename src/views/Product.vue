@@ -93,9 +93,12 @@ export default {
 
 <style scoped>
 .custom-image-size img {
-    width: 100%;
-    height: auto;
-    max-width: 400px; /* Adjust the max-width to your desired value */
-    object-fit: cover; /* This ensures the image covers the area without distortion */
+    width: 100%; /* Make it responsive within its container */
+    max-width: 500px; /* Maximum width for larger screens */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 500px; /* Ensure a max height */
+    object-fit: cover; /* Ensures uniform cropping without distortion */
+    border-radius: 10px; /* Optional: Rounded corners */
 }
+
 </style>
