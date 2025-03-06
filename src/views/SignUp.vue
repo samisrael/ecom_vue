@@ -49,6 +49,7 @@
 
 import axios from 'axios';
 import { toast } from 'bulma-toast';
+import { log } from 'util';
 
 export default {
     name: 'SignUp',
@@ -95,6 +96,19 @@ export default {
                         })
 
                         this.$router.push('/log-in')
+                    })
+                    .catch(error => {
+                        if (error.response) {
+                            for (const property in error.response.data) {
+                                this.errors.push(`${property}: ${error.response.data[property]}`)
+                            }
+
+                            console.log(JSON.stringify(error.response.data))
+                        } else if (error.message) {
+                            this.errors.push("Something went wrong nigga! Please don't try later")
+
+                            console.log(JSON.stringify(error))
+                        }
                     })
             }
         }
