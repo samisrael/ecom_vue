@@ -1,24 +1,21 @@
-
-
 <template>
     <div class="page-log-in">
         <div class="columns">
             <div class="column is-4 is-offset-4">
-                <h1 class="title">Log In</h1>
+                <h1 class="title">Log in</h1>
 
                 <form @submit.prevent="submitForm">
                     <div class="field">
                         <label>Username</label>
                         <div class="control">
-                            <input type="text" v-model="username" class="input">
+                            <input type="text" class="input" v-model="username">
                         </div>
                     </div>
-                
 
                     <div class="field">
                         <label>Password</label>
                         <div class="control">
-                            <input type="text" class="input" v-model="password">
+                            <input type="password" class="input" v-model="password">
                         </div>
                     </div>
 
@@ -28,13 +25,13 @@
 
                     <div class="field">
                         <div class="control">
-                            <button class="button is-dark">Log In</button>
+                            <button class="button is-dark">Log in</button>
                         </div>
                     </div>
 
                     <hr>
 
-                    Or <router-link to="/sign-up">Click Here</router-link> to Sign Up!
+                    Or <router-link to="/sign-up">click here</router-link> to sign up!
                 </form>
             </div>
         </div>
@@ -42,9 +39,7 @@
 </template>
 
 <script>
-
-import axios from 'axios';
-import { toast } from 'bulma-toast';
+import axios from 'axios'
 
 export default {
     name: 'LogIn',
@@ -56,18 +51,13 @@ export default {
         }
     },
     mounted() {
-        document.title =    "Log In | Siete"
-    },
-    methods: {
-        submitForm() {
-            this.errors = []
-        }
+        document.title = 'Log In | Djackets'
     },
     methods: {
         async submitForm() {
             axios.defaults.headers.common["Authorization"] = ""
 
-            localStorage.removeItem["token"]
+            localStorage.removeItem("token")
 
             const formData = {
                 username: this.username,
@@ -79,8 +69,8 @@ export default {
                 .then(response => {
                     const token = response.data.auth_token
 
-                    this.$store.commit('setToke', token)
-
+                    this.$store.commit('setToken', token)
+                    
                     axios.defaults.headers.common["Authorization"] = "Token " + token
 
                     localStorage.setItem("token", token)
@@ -95,8 +85,8 @@ export default {
                             this.errors.push(`${property}: ${error.response.data[property]}`)
                         }
                     } else {
-                        this.errors.push('Someting went wrong. Please try again!')
-
+                        this.errors.push('Something went wrong. Please try again')
+                        
                         console.log(JSON.stringify(error))
                     }
                 })
