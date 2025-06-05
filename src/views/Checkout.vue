@@ -22,9 +22,9 @@
                             v-bind:key="item.product.id"
                         >
                             <td>{{ item.product.name }}</td>
-                            <td>{{ item.product.price }}</td>
+                            <td>${{ item.product.price }}</td>
                             <td>{{ item.quantity }}</td>
-                            <td>{{ getItemTotal(item).toFixed(2) }}</td>
+                            <td>${{ getItemTotal(item).toFixed(2) }}</td>
                         </tr>
                     </tbody>
 
@@ -32,74 +32,85 @@
                         <tr>
                             <td colspan="2">Total</td>
                             <td>{{ cartTotalLength }}</td>
-                            <td>{{ cartTotalPrice.toFixed(2) }}</td>
+                            <td>${{ cartTotalPrice.toFixed(2) }}</td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
-            <div class="column is-12 box">
-                <h2 class = "subtitle">Shipping Details</h2>
 
-                <p class="has-text-grey mb-4">* All fields are required!</p>
+            <div class="column is-12 box">
+                <h2 class="subtitle">Shipping details</h2>
+
+                <p class="has-text-grey mb-4">* All fields are required</p>
 
                 <div class="columns is-multiline">
                     <div class="column is-6">
                         <div class="field">
-                            <label for="first_name">First Name</label>
+                            <label>First name*</label>
                             <div class="control">
-                                <input type="text" class="input" v-model="first_name" placeholder="">
+                                <input type="text" class="input" v-model="first_name">
                             </div>
                         </div>
+
                         <div class="field">
-                            <label for="last_name">Last Name</label>
+                            <label>Last name*</label>
                             <div class="control">
-                                <input type="text" class="input" v-model="last_name" placeholder="">
+                                <input type="text" class="input" v-model="last_name">
                             </div>
                         </div>
+
                         <div class="field">
-                            <label for="email">Email</label>
+                            <label>E-mail*</label>
                             <div class="control">
                                 <input type="email" class="input" v-model="email">
                             </div>
                         </div>
+
                         <div class="field">
-                            <label for="phone">Phone</label>
+                            <label>Phone*</label>
                             <div class="control">
                                 <input type="text" class="input" v-model="phone">
                             </div>
                         </div>
                     </div>
+
                     <div class="column is-6">
                         <div class="field">
-                            <label for="address">Address</label>
+                            <label>Address*</label>
                             <div class="control">
                                 <input type="text" class="input" v-model="address">
                             </div>
                         </div>
+
                         <div class="field">
-                            <label for="zipcode">Zip Code</label>
+                            <label>Zip code*</label>
                             <div class="control">
                                 <input type="text" class="input" v-model="zipcode">
                             </div>
                         </div>
+
                         <div class="field">
-                            <label for="place">Place</label>
+                            <label>Place*</label>
                             <div class="control">
                                 <input type="text" class="input" v-model="place">
                             </div>
                         </div>
                     </div>
-                    
                 </div>
-                <div class="notification is-danger mt" v-if="errors.length">
-                        <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
-                    </div>
+
+                <div class="notification is-danger mt-4" v-if="errors.length">
+                    <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
+                </div>
+
+                <hr>
+
+                <div id="card-element" class="mb-5"></div>
+
+                <template v-if="cartTotalLength">
                     <hr>
-                    <div class="mb-5" id="card-element"></div>
-                    <template v-if="cartTotalLength">
-                        <hr>
-                        <button class="button is-dark" @click="submitForm">Pay with Stripe</button>
-                    </template>
+
+                    <button class="button is-dark" @click="submitForm">Pay with Stripe</button>
+                </template>
             </div>
         </div>
     </div>
@@ -109,7 +120,7 @@
 import axios from 'axios'
 
 export default {
-    name: "Checkout",
+    name: 'Checkout',
     data() {
         return {
             cart: {
@@ -128,9 +139,17 @@ export default {
         }
     },
     mounted() {
-        document.title = 'Checkout | Siete'
+        document.title = 'Checkout | Djackets'
 
         this.cart = this.$store.state.cart
+
+        if (this.cartTotalLength > 0) {
+            this.stripe = Stripe('pk_test_51RWYrK6vcJxHsopBpYSb02rk6kcuSk27XwAiskyfgxWMS7S3HZFyJdu9Bb3T99nhrqAvHvVtPhnBDS6pryhnnYxm00IQLzozjq')
+            const elements = this.stripe.elements();
+            this.card = elements.create('card', { hidePostalCode: true })
+
+            this.card.mount('#card-element')
+        }
     },
     methods: {
         getItemTotal(item) {
@@ -140,29 +159,88 @@ export default {
             this.errors = []
 
             if (this.first_name === '') {
-                this.errors.push('First Name is required!')
+                this.errors.push('The first name field is missing!')
             }
+
             if (this.last_name === '') {
-                this.errors.push('Last Name is required!')
+                this.errors.push('The last name field is missing!')
             }
+
             if (this.email === '') {
-                this.errors.push('Email is required!')
+                this.errors.push('The email field is missing!')
             }
+
             if (this.phone === '') {
-                this.errors.push('Phone No is required!')
+                this.errors.push('The phone field is missing!')
             }
-            if (this.email === '') {
-                this.errors.push('Email is required!')
-            }
+
             if (this.address === '') {
-                this.errors.push('Address is required!')
+                this.errors.push('The address field is missing!')
             }
+
             if (this.zipcode === '') {
-                this.errors.push('Zip Code is required!')
+                this.errors.push('The zip code field is missing!')
             }
+
             if (this.place === '') {
-                this.errors.push('Place is required!')
+                this.errors.push('The place field is missing!')
             }
+
+            if (!this.errors.length) {
+                this.$store.commit('setIsLoading', true)
+
+                this.stripe.createToken(this.card).then(result => {                    
+                    if (result.error) {
+                        this.$store.commit('setIsLoading', false)
+
+                        this.errors.push('Something went wrong with Stripe. Please try again')
+
+                        console.log(result.error.message)
+                    } else {
+                        this.stripeTokenHandler(result.token)
+                    }
+                })
+            }
+        },
+        async stripeTokenHandler(token) {
+            const items = []
+
+            for (let i = 0; i < this.cart.items.length; i++) {
+                const item = this.cart.items[i]
+                const obj = {
+                    product: item.product.id,
+                    quantity: item.quantity,
+                    price: item.product.price * item.quantity
+                }
+
+                items.push(obj)
+            }
+
+            const data = {
+                'first_name': this.first_name,
+                'last_name': this.last_name,
+                'email': this.email,
+                'address': this.address,
+                'zipcode': this.zipcode,
+                'place': this.place,
+                'phone': this.phone,
+                'items': items,
+                'stripe_token': token.id
+            }
+
+            await axios
+                .post('/api/v1/checkout/', data)
+                .then(response => {
+                    this.$store.commit('clearCart')
+                    this.$router.push('/cart/success')
+                })
+                .catch(error => {
+                    this.errors.push('Something went wrong. Please try again')
+
+                    console.log(error)
+                })
+
+                this.$store.commit('setIsLoading', false)
         }
     },
     computed: {
@@ -173,7 +251,7 @@ export default {
         },
         cartTotalLength() {
             return this.cart.items.reduce((acc, curVal) => {
-                return acc+=curVal.quantity
+                return acc += curVal.quantity
             }, 0)
         }
     }
