@@ -27,7 +27,7 @@
                     </tbody>
                 </table>
 
-                <p v-else>You don't have any products in the cart NIGGAAA</p>
+                <p v-else>You don't have any products in the cart.</p>
             </div>
 
             <div class="column is-12 box">
